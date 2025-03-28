@@ -107,7 +107,7 @@ Here, we develop m6A-isoSC-seq, which employs both Oxford Nanopore long-read and
 
 
 ## The C-to-U mutation calling in illumina based single cell RNAseq data 
-Fig.2:Singel cell varient calling and cell cluster
+### Fig.2: Singel cell varient calling and cell cluster
 
 #### GATK based C to U mutation calling pipeline make:
 ```
@@ -226,10 +226,10 @@ Fig.2:Singel cell varient calling and cell cluster
 ```
 
 
-## Calculate ref and alt matrix based on long read mapping result
-### Fig.3:Nanopore varient calling and cell cluster
+## Calculate isoform expression and C-to-U mutation matrix based on long read mapping result
+### Fig.3: Nanopore varient calling and cell cluster
 
-#### C-to-U mutation matrix make in ONT based single cell RNAseq data
+#### isoform expression and C-to-U mutation matrix make in ONT based single cell RNAseq data
 ```
     1. parse illumina bam file
        java -jar -Xmx128g IlluminaParser-1.0.jar -b CB -g GN -u UB
@@ -341,7 +341,7 @@ Fig.2:Singel cell varient calling and cell cluster
                             --cell_type_filename <cell barcode to celltype table>
                             --output_mean_table <output mean mutation table>
 
-	python varixMatrix_to_cellsplit_m6Alevel_medium.py
+    python varixMatrix_to_cellsplit_m6Alevel_medium.py
                             --ref_matrix_filename <single cell ref matrix>
                             --alt_matrix_filename <single cell alt matrix>
                             --cell_type_filename <cell barcode to celltype table>
@@ -371,7 +371,7 @@ Fig.2:Singel cell varient calling and cell cluster
 ## Intronic polyadenylation transcripts annotation
 ### Fig.5:IpA isoform methylation levels
 ```
-python intron_apa_transcript_annotation.py
+    python intron_apa_transcript_annotation.py
                             --GenePred_table <GenePred table>
                             --Intronic_APA_annotation_transcript <IPA annotated table>
 ```
@@ -379,7 +379,7 @@ python intron_apa_transcript_annotation.py
 ## The distance of m6A to exon junction calculation
 ### Fig.6:NMD_and_retained-intron_isoform_methylation_levels
 ```
-python m6A_to_EJC_distance_calculation.py
+    python m6A_to_EJC_distance_calculation.py
                             --bed_format_file <m6A bed format file>
                             --GenePred_file <GenePred table>
                             --EJD_annotated_file <EJD annotated file>
@@ -388,7 +388,7 @@ python m6A_to_EJC_distance_calculation.py
 ## The length of coding sequence in last exon calculation for each isoform
 ### Fig.7:CMD_mediated_misprocessed_isoform_degradation
 ```
-python Protein_coding_transcript_annotation.py
+    python Protein_coding_transcript_annotation.py
                             --canonical_transcript_anno <transcript id to canonical transcript id table>
                             --GenePred_table <GenePred table>
                             --output_file <mulit coding sequence lenght annotated table>
