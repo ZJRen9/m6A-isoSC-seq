@@ -43,15 +43,18 @@ Here, we develop m6A-isoSC-seq, which employs both Oxford Nanopore long-read and
 
 #### The repeat, gene, strand and motif annotation of each C-to-U mutation:
 ```
+    1. 
     python pipeup_result_to_counts.PE.py 
                             -I1 <vcf result> 
                             -I2 <mpileup result> 
                             -O <count result>
     
+    2.
     python snp_result_clean_based_count.py 
                             --input_snp_result <count result> 
                             --cleaned_snp_result <cleaned_snp_result>
- 
+
+    3.
     python snp_result_annotation_for_alu.py 
                             --repeat_file <repeat annotation> 
                             --genome_size_file <genome size> 
@@ -59,18 +62,21 @@ Here, we develop m6A-isoSC-seq, which employs both Oxford Nanopore long-read and
                             --annotation_result <repeat annotated result> 
                             --binsize 10000
 
+    4.
     python snp_result_annotation_for_gene.py
                             --snp_file <repeat annotated result>
                             --GenePred <GenePred table>
                             --genome_size_file <genome size file>
                             --output_file <gene annotated result>
                             --sequence_type <3_type,5_type>
-    
+
+    5. 
     python snp_result_annotation_for_strand.py
                             --annotation_file <gene annotated result>
                             --sequence_type <fr-strand or rf-strand or non-strand>
                             --result_file <strand annotated result>
-    
+
+    6.
     python snp_result_annotation_for_motif.py
                             --strand_annotation_result <strand annotated result>
                             --fasta_file <hg38,mm10,or hg19 fasta file>
@@ -225,7 +231,102 @@ Fig.2:Singel cell varient calling and cell cluster
 
 #### C-to-U mutation matrix make in ONT based single cell RNAseq data
 ```
-    java -jar -Xmx220g Sicelore-2.0.jar SNPMatrix 
+    1. parse illumina bam file
+       java -jar -Xmx128g IlluminaParser-1.0.jar -b CB -g GN -u UB
+                            -i <short_bam>
+                            -o <short_bam.obj>
+                            -t <cell barcode table>
+
+    2. scan nanopore reads for poly(A)
+       java -jar $src_dir/Jar/NanoporeReadScanner-0.5.jar
+                            -i <long_read.fq>
+                            -o <output dir>
+
+    3. map nanopore reads to genome
+       minimap2 -ax splice --MD -uf --sam-hit-only -t 20 
+                            --junc-bed <grch38_splice_junc_for_mmap2.bed>
+                            <hg38.reference.fa>
+                            <long_read.fq>
+                            -o minimap.sam
+       samtools view -Sb minimap.sam -o minimap.unsort.bam
+       samtools sort minimap.unsorted.bam -o minimap.sort.bam
+       samtools index minimap.sort.bam
+
+    4. tag nanopore reads with gene name
+       java -jar -Xmx128g Sicelore-2.0.jar AddGeneNameTag
+                            I=<minimap.sort.bam>
+                            O=<minimap.gene.bam>
+                            REFFLAT=<short_bam.refFlat>
+                            GENETAG=<GE>
+                            ALLOW_MULTI_GENE_READS=true 
+                            USE_STRAND_INFO=true
+                            VALIDATION_STRINGENCY=SILENT
+
+    5. tag nanopore reads with fastq sequence
+       fxtools bt <minimap.gene.bam> US > minimap.geneus.bam
+
+    6. tag nanopore reads with cellBC/UMI barcodes by NanoHunter or 
+       NanoHunter query 
+                            -s <5_CTACACGACGCTCTTCCGATCT_B16_U12_T30_3>
+                            -l <cell barcode table> 
+                            -t 20 
+                            <short_bam> 
+                            <gtf> 
+                            <minimap.geneus.bam> 
+                            -o <minimap.umi_and_cellbarocde.bam>
+       or using
+       java -jar -Xmx16g NanoporeBC_UMI_finder-1.0.jar 
+                            -i <minimap.geneus.bam>
+                            -o <minimap.umi_and_cellbarocde.bam>
+                            -k <short_bam.obj>
+                            --maxUMIfalseMatchPercent 1 
+                            --maxBCfalseMatchPercent 5 
+                            --logFile out.log 
+                            --ncpu <20>
+	7. compute consensus sequence
+       java -jar -Xmx16g Sicelore-2.0.jar ComputeConsensus 
+                            T = <20> 
+                            I = <minimap.umi_and_cellbarcode.bam>
+                            O = <consensus_molecules.umi_and_cellbarcode.fq>
+                            TMPDIR=<tmp_dir>
+	
+    8. map consensus molecules to genome
+       minimap2 -ax splice -uf --MD --sam-hit-only -t 20 
+                            --junc-bed <grch38_splice_junc_for_mmap2.bed>
+                            <hg38.reference.fa>
+                            <consensus_molecules.umi_and_cellbarcode.fq>
+                            -o consensus_molecules.umi_and_cellbarcode.sam
+
+    9. add cellBC/UMI tags
+       java -jar -Xmx64g Sicelore-2.0.jar AddBamMoleculeTags 
+                            I = <consensus_molecules.umi_and_cellbarcode.sam>
+                            O = <consensus_molecules.umi_and_cellbarcode.tag.sam>
+
+    10. add gene name tag 
+       java -jar -Xmx64g Sicelore-2.0.jar AddGeneNameTag
+                            I = <consensus_molecules.umi_and_cellbarcode.tag.sam>
+                            O = <consensus_molecules.umi_and_cellbarcode.gene.sam>
+                            REFFLAT = <genome.fa>
+                            GENETAG=<GE>
+                            ALLOW_MULTI_GENE_READS=true
+                            USE_STRAND_INFO=true
+                            VALIDATION_STRINGENCY=SILENT
+
+	11. generate molecule isoform matrix
+       java -jar -Xmx64g Sicelore-2.0.jar IsoformMatrix
+                            DELTA = 2
+                            METHOD = STRICT
+                            ISOBAM = true 
+                            GENETAG = GE
+                            I = <consensus_molecules.umi_and_cellbarcode.gene.sam>
+                            REFFLAT= <genome.fa>
+                            CSV = <cell barcode table>
+                            PREFIX = sicmol 
+                            VALIDATION_STRINGENCY = SILENT
+                            OUTDIR= <output isoform expression matrix>
+
+    12. C to U mutation matrix make
+       java -jar -Xmx220g Sicelore-2.0.jar SNPMatrix 
                             --CSV <cell_barcodes.tsv>
                             --INPUT <nh_isobam.bam>
                             --OUTPUT <snp_calling>
