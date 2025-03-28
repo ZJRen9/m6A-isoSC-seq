@@ -42,19 +42,16 @@ Here, we develop m6A-isoSC-seq, which employs both Oxford Nanopore long-read and
 *Note: Please provide the genomic reference and make sure STAR, samtools, gatk and picard was installed.
 
 #### The repeat, gene, strand and motif annotation of each C-to-U mutation:
-```
-    1. 
+``` 
     python pipeup_result_to_counts.PE.py 
                             -I1 <vcf result> 
                             -I2 <mpileup result> 
                             -O <count result>
     
-    2.
     python snp_result_clean_based_count.py 
                             --input_snp_result <count result> 
                             --cleaned_snp_result <cleaned_snp_result>
 
-    3.
     python snp_result_annotation_for_alu.py 
                             --repeat_file <repeat annotation> 
                             --genome_size_file <genome size> 
@@ -62,7 +59,6 @@ Here, we develop m6A-isoSC-seq, which employs both Oxford Nanopore long-read and
                             --annotation_result <repeat annotated result> 
                             --binsize 10000
 
-    4.
     python snp_result_annotation_for_gene.py
                             --snp_file <repeat annotated result>
                             --GenePred <GenePred table>
@@ -70,13 +66,11 @@ Here, we develop m6A-isoSC-seq, which employs both Oxford Nanopore long-read and
                             --output_file <gene annotated result>
                             --sequence_type <3_type,5_type>
 
-    5. 
     python snp_result_annotation_for_strand.py
                             --annotation_file <gene annotated result>
                             --sequence_type <fr-strand or rf-strand or non-strand>
                             --result_file <strand annotated result>
 
-    6.
     python snp_result_annotation_for_motif.py
                             --strand_annotation_result <strand annotated result>
                             --fasta_file <hg38,mm10,or hg19 fasta file>
@@ -90,12 +84,10 @@ Here, we develop m6A-isoSC-seq, which employs both Oxford Nanopore long-read and
                             --input_bin_size <100>
                             --input_slide_lenght <50>
                             --output_window_filename <splited window file name>
-   bedtools intersect 
+   bedtools intersect -s -wao
                             -a hg38_10X_genes_transMerge_slidewindow.bed 
                             -b eDART-seq_C_to_T_varient.bed 
-                            -s 
-                            -wao 
-                            | >> intersect_result.bed
+                            >> intersect_result.bed
    python overlap_mutation_site_count.py
                             --input_intersect_result <intersect_result.bed>
                             --output_windown_mutation_count <counted_intersect_result.txt>
