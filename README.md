@@ -3,31 +3,25 @@
 
 Here, we develop m6A-isoSC-seq, which employs both Oxford Nanopore long-read and Illumina short-read sequencing on the same 10x Genomics single-cell cDNA library with APOBEC1-YTH induced C-to-U mutations near m6A sites. Through m6A-isoSC-seq on a pooled sample of three cell line origins, we unveil a profound degree of m6A heterogeneity at both the isoform and single-cell levels. Through comparisons across single cells, we identify widespread specific m6A methylation on certain RNA isoforms, usually those misprocessed RNA isoforms.
 
-# Table of Contents
+## Table of Contents
 - **[Running m6A-isoSC-seq](#running-m6A-isoSC-seq)**<br>
-    - **[Requirements](#requirement)**<br>
-    - **[Installation](#installation)**<br>
-    - **[Varient calling based on RNA-seq](#data-prepare)**<br>
-    - **[m6A Prediction](#m6A-prediction)**<br>
-    - **[Model Training](#semi-supervised-model-training)**<br>
 - **[Getting Help](#getting-help)**<br>
 - **[Contacts](#contacts)**<br>
 - **[Citing](#citing-m6aiso)**<br>
 - **[Contributors](#contributors)**<br>
 - **[License](#license)**<br>
 
-# Running m6Aiso
-
 ## Requirements
-
-1. gatk
-2. gzip (python)
-3. Python v3.7
-4. numpy v1.20.1
-5. m6Aiso v1.0.0
-6. pandas v1.2.4
-7. Sicelore-2.0
-8. samtools vz.0.0
+1. gatk (v3.8)
+2. CTK-tools (v1.1.3)
+3. Picard (v2.22.3)
+4. STAR (v2.7.3a)
+5. Python (v3.7)
+6. numpy (v1.20.1)
+7. m6Aiso (v1.0.0)
+8. pandas (v1.2.4)
+9. Sicelore (v2.0)
+10. Samtools (v1.7)
 
 ## eDART-seq varient calling in illumina RNAseq data 
 ### Fig.1:varient calling and annotation
@@ -105,14 +99,9 @@ Here, we develop m6A-isoSC-seq, which employs both Oxford Nanopore long-read and
                             --counted_peak_result <peak_result>
 ```
 
-```
-    python -m m6Aiso molecular_m6A_predication 
-                            --using_signal_filename <signal.tsv>
-                            --predict_result_filename <molecular_m6A_prob.txt>
-```
 
 ## The C-to-U mutation calling in illumina based single cell RNAseq data 
-Fig.2:Singel_cell_varient_calling_and_cell_cluster
+Fig.2:Singel cell varient calling and cell cluster
 
 #### GATK based C to U mutation calling pipeline make:
 ```
@@ -195,7 +184,7 @@ Fig.2:Singel_cell_varient_calling_and_cell_cluster
 	
 
 ```
-#### peak matrix make:
+#### Single cell m6A rate matrix make:
 ```
 	vartrix_linux
                             --bam <cellranger output bam>
@@ -259,7 +248,7 @@ Fig.2:Singel_cell_varient_calling_and_cell_cluster
 
 ```
 
-## isoform m6A level calculation based on DRS data and m6Aiso
+## Isoform m6A level calculation based on DRS data and m6Aiso
 ### Fig.4:Specifically_methylated_isoforms_in_single_cell
 ```
     nanopolish eventalign 
@@ -278,8 +267,8 @@ Fig.2:Singel_cell_varient_calling_and_cell_cluster
 ```
 
 
-## Intronic_APA_annotation
-### Fig.5:IPA_isoform_methylation_levels
+## Intronic polyadenylation transcripts annotation
+### Fig.5:IpA isoform methylation levels
 ```
 python intron_apa_transcript_annotation.py
                             --GenePred_table <GenePred table>
@@ -295,7 +284,7 @@ python m6A_to_EJC_distance_calculation.py
                             --EJD_annotated_file <EJD annotated file>
 ```
 
-## The length of coding sequence in last exon calculation
+## The length of coding sequence in last exon calculation for each isoform
 ### Fig.7:CMD_mediated_misprocessed_isoform_degradation
 ```
 python Protein_coding_transcript_annotation.py
@@ -325,4 +314,4 @@ If you use m6A-isoSC-seq in your research, please cite
 This code is developed and maintaned by Jinkai Wang, [Zhijun Ren](https://github.com/ZJRen9), Xiang Huang and Yan Gao. If you want to contribute, please leave an issue or submit a pull request. We appreciate contributions on bug fixes and potential new features. Thank you!
 
 # License
-m6Aiso is licensed under the terms of the MIT license.
+m6A-isoSC-seq is licensed under the terms of the MIT license.
