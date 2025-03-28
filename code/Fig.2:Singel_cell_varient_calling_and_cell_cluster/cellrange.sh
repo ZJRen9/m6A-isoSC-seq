@@ -1,0 +1,1 @@
+/home/ZJRen/public2/Single-cell-A-to-I/tools/cellranger-6.0.1/cellranger count --id=run_YTH_fusion_CBE --fastqs=../fastq/YTH_fusion_CBE_10X --sample=YTH_fusion_CBE_10X --transcriptome=/home/ZJRen/index.file/hg38_index.file/10X_resource/refdata-gex-GRCh38-2020-A
