@@ -303,7 +303,7 @@ Jinkai Wang: wangjk@mail.sysu.edu.cn
 ZhiJun Ren: renzhj7@mail.sysu.edu.cn
 
 
-# Citing m6Aiso
+# Citing m6A-isoSC-seq
 
 If you use m6A-isoSC-seq in your research, please cite
 [Isoform characterization of m6A in single cells identifies its role in RNA surveillance](doi:XXXX)
@@ -311,7 +311,7 @@ If you use m6A-isoSC-seq in your research, please cite
 
 # Contributors
 
-This code is developed and maintaned by Jinkai Wang, [Zhijun Ren](https://github.com/ZJRen9), Xiang Huang and Yan Gao. If you want to contribute, please leave an issue or submit a pull request. We appreciate contributions on bug fixes and potential new features. Thank you!
+This code is developed and maintaned by Jinkai Wang, [Zhijun Ren](https://github.com/ZJRen9), Jialiang He and Yan Gao. If you want to contribute, please leave an issue or submit a pull request. We appreciate contributions on bug fixes and potential new features. Thank you!
 
 # License
 m6A-isoSC-seq is licensed under the terms of the MIT license.
