@@ -23,7 +23,7 @@ Here, we develop m6A-isoSC-seq, which employs both Oxford Nanopore long-read and
 9. Sicelore (v2.0)
 10. Samtools (v1.7)
 
-## eDART-seq varient calling in illumina RNAseq data 
+## eDART-seq varient calling in Illumina RNA-seq data 
 ###    Fig.1: varient calling and annotation
 
 #### GATK based varient calling pipeline make:
@@ -77,7 +77,7 @@ Here, we develop m6A-isoSC-seq, which employs both Oxford Nanopore long-read and
                             --result_file <motif annotated result>    
 ```
 
-#### The peak calling based on C to U mutation:
+#### The peak calling based on C-to-U mutation:
 ```
    python merge_transcript_to_slide_windown.py
                             --input_merged_genePred <GenePred table>
@@ -98,10 +98,10 @@ Here, we develop m6A-isoSC-seq, which employs both Oxford Nanopore long-read and
 ```
 
 
-## The C-to-U mutation calling in illumina based single cell RNAseq data 
-###    Fig.2: Singel cell varient calling and cell cluster
+## The C-to-U mutation calling in Illumina based single-cell RNA-seq data 
+###    Fig.2: Singel-cell varient calling and cell cluster
 
-#### GATK based C to U mutation calling pipeline make:
+#### GATK based C-to-U mutation calling pipeline make:
 ```
     python umi_and_cellbarcode_fusion_to_fastq.py
                             --R1_fastq <fastq with read>
@@ -140,7 +140,7 @@ Here, we develop m6A-isoSC-seq, which employs both Oxford Nanopore long-read and
                             --snp_level_filename <output C to U mutation level file>
 ```
 
-#### The repeat, gene, strand and motif annotation of each C to U mutation:
+#### The repeat, gene, strand and motif annotation of each C-to-U mutation:
 ```
     python Single_cell_table_annotation_alu.py
                             --repeat_file <repeat annotation>
@@ -182,7 +182,7 @@ Here, we develop m6A-isoSC-seq, which employs both Oxford Nanopore long-read and
 	
 
 ```
-#### Single cell m6A rate matrix make:
+#### Single-cell m6A rate matrix make:
 ```
     vartrix_linux
                             --bam <cellranger output bam>
@@ -218,12 +218,12 @@ Here, we develop m6A-isoSC-seq, which employs both Oxford Nanopore long-read and
 ```
 
 
-## Calculate isoform expression and C-to-U mutation matrix based on long read mapping result
+## Isoform expression and C-to-U mutation matrix calculation based on long read single-cell data
 ###    Fig.3: Nanopore varient calling and cell cluster
 
-#### isoform expression and C-to-U mutation matrix make in ONT based single cell RNAseq data
+#### Isoform expression and C-to-U mutation matrix calculation in ONT based single cell RNA-seq data
 ```
-    1. parse illumina bam file
+    1. parse Illumina bam file
        java -jar -Xmx128g IlluminaParser-1.0.jar -b CB -g GN -u UB
                             -i <short_bam>
                             -o <short_bam.obj>
@@ -322,10 +322,10 @@ Here, we develop m6A-isoSC-seq, which employs both Oxford Nanopore long-read and
                             --CSV <cell_barcodes.tsv>
                             --INPUT <nh_isobam.bam>
                             --OUTPUT <snp_calling>
-                            --SNP <C to U mutation calling in illumina RNA-seq>
+                            --SNP <C to U mutation calling in Illumina RNA-seq>
                             --PREFIX <nh_c_to_t>
 ```
-#### The mean and medium m6A level calculation of each isoform in single cell
+#### The mean and medium m6A level calculation of each isoform in single cell data
 ```
     python varixMatrix_to_cellsplit_m6Alevel_mean.py 
                             --ref_matrix_filename <single cell ref matrix>
