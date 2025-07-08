@@ -399,7 +399,7 @@ ZhiJun Ren: renzhj7@mail.sysu.edu.cn
 # Citing m6A-isoSC-seq
 
 If you use m6A-isoSC-seq in your research, please cite
-['Isoform characterization of m6A in single cells identifies its role in RNA surveillance'](doi:XXXX)
+['Ren Z, He J, Huang X, et al. Isoform characterization of m6A in single cells identifies its role in RNA surveillance. Nat Commun. 2025;16(1):5828.'](doi:10.1038/s41467-025-60869-0)
 
 
 # Contributors
